@@ -4,6 +4,7 @@ import React from "react";
 import { PlayIcon } from "../components/Icons.jsx";
 // import axios from "axios";
 // const axios = require('axios');
+const { copySelection, getSelection, getSelectionBounds, selectAll, duplicateDocument, paste, makeLayerMask, openLayerMask, selectLayer, deselect, makeSelection } = require('../lib/Functions');
 
 export const MoreDemos = () => {
   const app = require("photoshop").app;
@@ -16,9 +17,10 @@ export const MoreDemos = () => {
 
 
   function addAjaxHeaders(xhr) {
-    
+    xhr.setRequestHeader('Accept', 'application/json');
   
     var apiKey = "wrM622FnpZmiGSW4SfcJChPz";
+    
     if (apiKey != undefined) {
       xhr.setRequestHeader("X-Api-Key", apiKey);
     }
@@ -31,18 +33,18 @@ export const MoreDemos = () => {
       var formData = new FormData();
       formData.append("image_file", file, "original.jpg");
       formData.append("size", "auto");
-      formData.append("format", "png");
+      formData.append("format", "zip");
 
       let xhr = new XMLHttpRequest();
     xhr.open("POST", "https://api.remove.bg/v1.0/removebg");
-    console.log(formData)
+    console.log(formData + '1')
 
     addAjaxHeaders(xhr);
 
     xhr.onload = function () {
       if (this.status >= 200 && this.status < 300) {
         resolve(xhr);
-        // console.log(xhr)
+        console.log(xhr)
       } else {
         reject({
           status: this.status,
@@ -71,7 +73,7 @@ export const MoreDemos = () => {
       console.log(zipEntries[i].name);
       var currentZipEntry = zipEntries[i];
   
-      tempFile = await folderEntry.createFile(currentZipEntry[1].name, { overwrite: true });
+     let tempFile = await folderEntry.createFile(currentZipEntry[1].name, { overwrite: true });
       await tempFile.write(currentZipEntry[1]._data.compressedContent);
       returnFiles[currentZipEntry[1].name] = tempFile;
     }
@@ -97,10 +99,38 @@ export const MoreDemos = () => {
 
         var xhr = await upload(tempFileContents);
         
-        console.log(xhr.response)
+        console.log(xhr)
         let data = JSON.parse(xhr.response);
-        // console.log(data);
+        console.log(data);
         var files = await saveRemoveBgResult(tempFolder, data);
+        console.log(files);
+
+        let colorFile = files['color.jpg'];
+        const colorDoc = await app.open(colorFile);
+        var colorLayer = colorDoc.activeLayers[0];
+        colorLayer.name = "rgb";
+
+        let alphaFile = files['alpha.png'];
+        const alphaDoc = await app.open(alphaFile);
+
+        const alphaLayer = await alphaDoc.activeLayers[0].duplicate(colorDoc);
+        alphaLayer.name = "alpha";
+        alphaDoc.closeWithoutSaving();
+
+        app.activeDocument = colorDoc;
+
+        await selectAll(); // select all from alpha layer
+        await copySelection();
+        await selectLayer("rgb");
+
+        await makeLayerMask();
+        await openLayerMask();
+
+        await paste();
+
+        await colorDoc.activeLayers[0].duplicate(doc, "remove.bg");
+        await colorDoc.closeWithoutSaving();
+
       } catch (err) {
         console.log(err);
       }
