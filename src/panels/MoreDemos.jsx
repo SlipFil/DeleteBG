@@ -98,10 +98,10 @@ export const MoreDemos = () => {
           format: require("uxp").storage.formats.binary,
         });
 
-        console.log(layers)
-        let selectedLayers=[]
-        layers.find(layer => {if(layer.selected) {selectedLayers.push(layer)}})
-        console.log(selectedLayers)
+        // console.log(layers)
+        // let selectedLayers=[]
+        // layers.find(layer => {if(layer.selected) {selectedLayers.push(layer)}})
+        // console.log(selectedLayers)
         await mergeSelected()
 
         // var xhr = await upload(tempFileContents);
@@ -148,13 +148,7 @@ export const MoreDemos = () => {
     return await exportFile();
   }
 
-  const CreateNewLayerHandler = () => {
-    const copyLayer = layer.duplicate();
-    console.log(copyLayer);
-    console.log(layer);
-
-    // doc.layers.push({})
-  };
+  
 
   return (
     <>
