@@ -145,6 +145,25 @@ async function duplicateDocument() {
     return result;
 }
 
+
+
+async function mergeSelected() {
+    const result = await require('photoshop').action.batchPlay(
+        [
+           {
+              _obj: "mergeLayersNew",
+              _options: {
+                 dialogOptions: "dontDisplay"
+              }
+           }
+        ],{
+           synchronousExecution: false,
+           modalBehavior: "fail"
+        });
+
+    return result;
+}
+
 async function paste() {
     const result = await require('photoshop').action.batchPlay(
         [
@@ -282,4 +301,4 @@ async function deselect() {
     return result;
 }
 
-module.exports = { copySelection, getSelection, getSelectionBounds, selectAll, duplicateDocument, paste, makeLayerMask, openLayerMask, selectLayer, deselect, makeSelection };
+module.exports = { mergeSelected, copySelection, getSelection, getSelectionBounds, selectAll, duplicateDocument, paste, makeLayerMask, openLayerMask, selectLayer, deselect, makeSelection };

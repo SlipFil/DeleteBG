@@ -4,7 +4,7 @@ import React from "react";
 import { PlayIcon } from "../components/Icons.jsx";
 // import axios from "axios";
 // const axios = require('axios');
-const { copySelection, getSelection, getSelectionBounds, selectAll, duplicateDocument, paste, makeLayerMask, openLayerMask, selectLayer, deselect, makeSelection } = require('../lib/Functions');
+const { mergeSelected, copySelection, getSelection, getSelectionBounds, selectAll, duplicateDocument, paste, makeLayerMask, openLayerMask, selectLayer, deselect, makeSelection } = require('../lib/Functions');
 
 export const MoreDemos = () => {
   const app = require("photoshop").app;
@@ -82,6 +82,7 @@ export const MoreDemos = () => {
   }
 
   async function exportFile() {
+    console.log('deleteBg was started')
     var tempFolder = await fs.getTemporaryFolder();
     // console.log(tempFolder);
     let tempFile = await tempFolder.createFile("temp.jpg", { overwrite: true });
@@ -97,7 +98,13 @@ export const MoreDemos = () => {
           format: require("uxp").storage.formats.binary,
         });
 
-        var xhr = await upload(tempFileContents);
+        console.log(layers)
+        let selectedLayers=[]
+        layers.find(layer => {if(layer.selected) {selectedLayers.push(layer)}})
+        console.log(selectedLayers)
+        await mergeSelected()
+
+        // var xhr = await upload(tempFileContents);
         
         console.log(xhr)
         let data = JSON.parse(xhr.response);
@@ -134,7 +141,7 @@ export const MoreDemos = () => {
       } catch (err) {
         console.log(err);
       }
-    }, 2000);
+    }, 500);
   }
 
   async function Handler() {
@@ -155,14 +162,14 @@ export const MoreDemos = () => {
         <span slot="icon">
           <PlayIcon />
         </span>
-        Start
+        Delete BG
       </sp-button>
-      <sp-button variant="primary" onClick={CreateNewLayerHandler}>
+      {/* <sp-button variant="primary" onClick={CreateNewLayerHandler}>
         <span slot="icon">
           <PlayIcon />
         </span>
         Create Layer
-      </sp-button>
+      </sp-button> */}
     </>
   );
 };
