@@ -28,10 +28,13 @@
     "webpack-cli": "^4.9.1"
   },
   "dependencies": {
+    "@adobe/react-spectrum": "^3.16.3",
     "axios": "^0.25.0",
     "cross-env": "^7.0.2",
     "form-data": "^4.0.0",
     "fs": "^0.0.1-security",
+    "mobx": "^6.4.2",
+    "mobx-react-lite": "^3.3.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   },

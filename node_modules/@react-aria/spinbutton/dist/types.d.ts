@@ -1,0 +1,20 @@
+import { AriaButtonProps } from "@react-types/button";
+import { HTMLAttributes } from "react";
+import { InputBase, RangeInputBase, Validation, ValueBase } from "@react-types/shared";
+export interface SpinButtonProps extends InputBase, Validation, ValueBase<number>, RangeInputBase<number> {
+    textValue?: string;
+    onIncrement?: () => void;
+    onIncrementPage?: () => void;
+    onDecrement?: () => void;
+    onDecrementPage?: () => void;
+    onDecrementToMin?: () => void;
+    onIncrementToMax?: () => void;
+}
+export interface SpinbuttonAria {
+    spinButtonProps: HTMLAttributes<HTMLDivElement>;
+    incrementButtonProps: AriaButtonProps;
+    decrementButtonProps: AriaButtonProps;
+}
+export function useSpinButton(props: SpinButtonProps): SpinbuttonAria;
+
+//# sourceMappingURL=types.d.ts.map
